@@ -58,4 +58,8 @@ public class SimpleStateVisual extends Group {
 		label.setText(text);
 	}
 
+	public GeometryNode<RoundedRectangle> getShape() {
+		return shape;
+	}
+
 }

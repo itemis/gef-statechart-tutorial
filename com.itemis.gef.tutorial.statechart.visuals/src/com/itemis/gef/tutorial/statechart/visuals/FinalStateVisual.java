@@ -2,6 +2,7 @@ package com.itemis.gef.tutorial.statechart.visuals;
 
 import org.eclipse.gef.fx.nodes.GeometryNode;
 import org.eclipse.gef.geometry.planar.Ellipse;
+import org.eclipse.gef.geometry.planar.IGeometry;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -22,6 +23,10 @@ public class FinalStateVisual extends Group {
 		innerCircle.setStroke(null);
 
 		getChildren().addAll(outerCircle, innerCircle);
+	}
+
+	public GeometryNode<? extends IGeometry> getOuterCircle() {
+		return outerCircle;
 	}
 
 }
