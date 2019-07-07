@@ -1,0 +1,19 @@
+digraph {
+
+	rankdir=LR
+
+	node[fillcolor=black label="" style=filled width=0.25]
+
+	startNode[shape=circle]
+
+	simpleNode[
+		fillcolor=green
+		label=simple
+		shape=rectangle
+		style="rounded, filled"
+	]
+
+	endNode[shape=doublecircle ]
+
+	startNode -> simpleNode -> endNode
+}
