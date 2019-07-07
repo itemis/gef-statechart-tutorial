@@ -62,4 +62,23 @@ public class SimpleStateVisual extends Group {
 		return shape;
 	}
 
+	@Override
+	public double minWidth(double height) {
+		return label.getBoundsInLocal().getWidth();
+	}
+
+	@Override
+	public double minHeight(double width) {
+		return label.getBoundsInLocal().getHeight();
+	}
+
+	@Override
+	public double maxWidth(double height) {
+		return Double.MAX_VALUE;
+	}
+
+	@Override
+	public double maxHeight(double width) {
+		return Double.MAX_VALUE;
+	}
 }

@@ -13,8 +13,10 @@ import com.itemis.gef.tutorial.statechart.model.State;
 
 import javafx.scene.Node;
 import javafx.scene.transform.Affine;
+import javafx.scene.transform.Translate;
 
-public abstract class AbstractStatePart<T extends Node> extends AbstractContentPart<T> {
+public abstract class AbstractStatePart<T extends Node> extends AbstractContentPart<T>
+		implements ITransformableContentPart<T> {
 
 	@Override
 	public State getContent() {
@@ -40,4 +42,18 @@ public abstract class AbstractStatePart<T extends Node> extends AbstractContentP
 		return Collections.emptyList();
 	}
 
+	@Override
+	public Affine getContentTransform() {
+		Rectangle bounds = getContent().getBounds();
+		return new Affine(new Translate(bounds.getX(), bounds.getY()));
+	}
+
+	@Override
+	public void setContentTransform(Affine totalTransform) {
+		// storing the new position
+		Rectangle bounds = getContent().getBounds().getCopy();
+		bounds.setX(totalTransform.getTx());
+		bounds.setY(totalTransform.getTy());
+		getContent().setBounds(bounds);
+	}
 }

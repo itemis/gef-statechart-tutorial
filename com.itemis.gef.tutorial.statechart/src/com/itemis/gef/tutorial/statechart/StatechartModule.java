@@ -5,14 +5,21 @@ import org.eclipse.gef.common.adapt.inject.AdapterMaps;
 import org.eclipse.gef.mvc.fx.MvcFxModule;
 import org.eclipse.gef.mvc.fx.handlers.FocusAndSelectOnClickHandler;
 import org.eclipse.gef.mvc.fx.handlers.HoverOnHoverHandler;
+import org.eclipse.gef.mvc.fx.handlers.ResizeTranslateFirstAnchorageOnHandleDragHandler;
+import org.eclipse.gef.mvc.fx.handlers.TranslateSelectedOnDragHandler;
 import org.eclipse.gef.mvc.fx.parts.DefaultHoverFeedbackPartFactory;
 import org.eclipse.gef.mvc.fx.parts.DefaultSelectionFeedbackPartFactory;
+import org.eclipse.gef.mvc.fx.parts.DefaultSelectionHandlePartFactory;
 import org.eclipse.gef.mvc.fx.parts.IContentPartFactory;
+import org.eclipse.gef.mvc.fx.parts.SquareSegmentHandlePart;
+import org.eclipse.gef.mvc.fx.policies.ResizePolicy;
+import org.eclipse.gef.mvc.fx.policies.TransformPolicy;
 import org.eclipse.gef.mvc.fx.providers.ShapeBoundsProvider;
 
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.itemis.gef.tutorial.statechart.parts.AbstractStatePart;
+import com.itemis.gef.tutorial.statechart.parts.SimpleStatePart;
 import com.itemis.gef.tutorial.statechart.parts.StateAnchorProvider;
 import com.itemis.gef.tutorial.statechart.parts.StateOutlineProvider;
 import com.itemis.gef.tutorial.statechart.parts.StatechartContentPartFactory;
@@ -42,6 +49,10 @@ public class StatechartModule extends MvcFxModule {
 
 		// contents
 		bindAbstractStatePartAdapters(AdapterMaps.getAdapterMapBinder(binder(), AbstractStatePart.class));
+		bindSimpleStatePartAdapters(AdapterMaps.getAdapterMapBinder(binder(), SimpleStatePart.class));
+
+		// handles
+		bindSquareSegmentHandlePartAdapter(AdapterMaps.getAdapterMapBinder(binder(), SquareSegmentHandlePart.class));
 	}
 
 	private void bindIContentPartFactory() {
@@ -61,6 +72,35 @@ public class StatechartModule extends MvcFxModule {
 
 		// bind anchor provider
 		adapterMapBinder.addBinding(AdapterKey.defaultRole()).to(StateAnchorProvider.class);
+
+		// register transform policy
+		adapterMapBinder.addBinding(AdapterKey.defaultRole()).to(TransformPolicy.class);
+
+		// register translate on drag
+		adapterMapBinder.addBinding(AdapterKey.defaultRole()).to(TranslateSelectedOnDragHandler.class);
+
+	}
+
+	private void bindSimpleStatePartAdapters(MapBinder<AdapterKey<?>, Object> adapterMapBinder) {
+		// register selection handles for resizement
+		adapterMapBinder
+				.addBinding(AdapterKey.role(DefaultSelectionHandlePartFactory.SELECTION_HANDLES_GEOMETRY_PROVIDER))
+				.to(ShapeBoundsProvider.class);
+
+		// support resizing nodes
+		adapterMapBinder.addBinding(AdapterKey.defaultRole()).to(ResizePolicy.class);
+
+	}
+
+	/**
+	 * Binds the parts of the selection handles (the squares in the corner) to
+	 * handlers
+	 *
+	 * @param adapterMapBinder
+	 */
+	private void bindSquareSegmentHandlePartAdapter(MapBinder<AdapterKey<?>, Object> adapterMapBinder) {
+		adapterMapBinder.addBinding(AdapterKey.defaultRole())
+				.to(ResizeTranslateFirstAnchorageOnHandleDragHandler.class);
 	}
 
 }
