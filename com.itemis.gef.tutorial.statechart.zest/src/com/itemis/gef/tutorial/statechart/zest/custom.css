@@ -1,0 +1,10 @@
+.node .shape {
+	-fx-fill: lightgreen;
+	-fx-stroke: black;
+	-fx-arc-width: 15;
+	-fx-arc-height: 15;
+}
+
+.node .label {
+	-fx-fill:black;
+}
