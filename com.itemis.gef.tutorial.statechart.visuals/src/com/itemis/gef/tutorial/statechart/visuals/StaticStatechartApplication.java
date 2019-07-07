@@ -1,12 +1,15 @@
 package com.itemis.gef.tutorial.statechart.visuals;
 
+import org.eclipse.gef.fx.anchors.DynamicAnchor;
+
 import javafx.application.Application;
 import javafx.collections.ObservableList;
-import javafx.geometry.Bounds;
+import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 public class StaticStatechartApplication extends Application {
@@ -41,20 +44,52 @@ public class StaticStatechartApplication extends Application {
 		// add states
 		children.addAll(initialState, simpleState, finalState);
 
+		// make states draggable
+		makeDraggable(initialState);
+		makeDraggable(simpleState);
+		makeDraggable(finalState);
+
 		primaryStage.setScene(new Scene(root, 440, 250));
 		primaryStage.setTitle("GEF Statechart Tutorial");
 		primaryStage.show();
 	}
 
 	private Node createTransition(Node startNode, Node endNode) {
-		Bounds startNodeBounds = startNode.getBoundsInParent();
-		Bounds endNodeBounds = endNode.getBoundsInParent();
-		double startX = startNodeBounds.getMinX() + startNodeBounds.getWidth() / 2;
-		double startY = startNodeBounds.getMinY() + startNodeBounds.getHeight() / 2;
-		double endX = endNodeBounds.getMinX() + endNodeBounds.getWidth() / 2;
-		double endY = endNodeBounds.getMinY() + endNodeBounds.getHeight() / 2;
+		TransitionVisual transition = new TransitionVisual();
+		DynamicAnchor startAnchor = new DynamicAnchor(startNode);
+		DynamicAnchor endAnchor = new DynamicAnchor(endNode);
+		transition.setStartAnchor(startAnchor);
+		transition.setEndAnchor(endAnchor);
 
-		Line transition = new Line(startX, startY, endX, endY);
 		return transition;
+	}
+
+	private void makeDraggable(final Node node) {
+		EventHandler<MouseEvent> dragNodeHandler = new EventHandler<MouseEvent>() {
+
+			private Point2D initialMouseLocation;
+			private Point2D initialTranslation;
+
+			@Override
+			public void handle(MouseEvent event) {
+				if (MouseEvent.MOUSE_PRESSED.equals(event.getEventType())) {
+					// save the initial mouse location and initial node translation when the node is
+					// pressed
+					initialMouseLocation = new Point2D(event.getSceneX(), event.getSceneY());
+					initialTranslation = new Point2D(node.getTranslateX(), node.getTranslateY());
+				} else {
+					// move the node by the mouse offset
+					double mouseLocationDeltaX = event.getSceneX() - initialMouseLocation.getX();
+					double mouseLocationDeltaY = event.getSceneY() - initialMouseLocation.getY();
+					node.setTranslateX(initialTranslation.getX() + mouseLocationDeltaX);
+					node.setTranslateY(initialTranslation.getY() + mouseLocationDeltaY);
+				}
+			}
+
+		};
+
+		node.addEventHandler(MouseEvent.MOUSE_PRESSED, dragNodeHandler);
+		node.addEventHandler(MouseEvent.MOUSE_DRAGGED, dragNodeHandler);
+		node.addEventHandler(MouseEvent.MOUSE_RELEASED, dragNodeHandler);
 	}
 }

@@ -1,5 +1,8 @@
 package com.itemis.gef.tutorial.statechart.visuals;
 
+import org.eclipse.gef.fx.nodes.GeometryNode;
+import org.eclipse.gef.geometry.planar.RoundedRectangle;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
@@ -7,23 +10,20 @@ import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class SimpleStateVisual extends Group {
 
 	private static final double PADDING = 10;
 
-	private Rectangle shape;
+	private GeometryNode<RoundedRectangle> shape;
 	private Text label;
 
 	public SimpleStateVisual() {
 		// create shape
-		shape = new Rectangle(70, 30);
+		shape = new GeometryNode<RoundedRectangle>(new RoundedRectangle(0, 0, 70, 30, 8, 8));
 		shape.setStroke(Color.BLACK);
 		shape.setFill(Color.LIGHTGREEN);
-		shape.setArcWidth(15);
-		shape.setArcHeight(15);
 
 		// create label
 		label = new Text();
@@ -37,8 +37,7 @@ public class SimpleStateVisual extends Group {
 				Bounds labelBounds = label.getLayoutBounds();
 				double newWidth = labelBounds.getWidth() + PADDING;
 				double newHeight = labelBounds.getHeight() + PADDING;
-				shape.setWidth(newWidth);
-				shape.setHeight(newHeight);
+				shape.resize(newWidth, newHeight);
 			}
 
 		});
