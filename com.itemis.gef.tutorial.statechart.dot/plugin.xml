@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="com.itemis.gef.tutorial.statechart.dot.StatechartDotView"
+            id="com.itemis.gef.tutorial.statechart.dot.view1"
+            name="Statechart DOT View"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>
