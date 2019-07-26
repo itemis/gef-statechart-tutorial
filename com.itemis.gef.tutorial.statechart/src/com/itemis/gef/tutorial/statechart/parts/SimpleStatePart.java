@@ -20,36 +20,37 @@ public class SimpleStatePart extends AbstractStatePart<SimpleStateVisual>
 	protected void doRefreshVisual(SimpleStateVisual visual) {
 		super.doRefreshVisual(visual);
 
+		// use the IResizableContentPart API to resize the visual
+		setVisualSize(getContentSize());
+		
 		// refresh the label text from the model
 		SimpleState state = getContent();
 		visual.setText(state.getName());
-
-		// use the IResizableContentPart API to resize the visual
-		Dimension contentSize = getContentSize();
-		setVisualSize(contentSize);
-
-		// use the ITransformableContentPart API to position the visual
-		setVisualTransform(getContentTransform());
 	}
 
 	@Override
 	public SimpleState getContent() {
 		return (SimpleState) super.getContent();
 	}
+	
+	@Override
+	public Dimension getVisualSize() {
+		GeometryNode<RoundedRectangle> shape = getVisual().getShape();
+		return new Dimension(shape.getWidth(), shape.getHeight());
+	}
 
 	@Override
 	public Dimension getContentSize() {
 		return getContent().getBounds().getSize();
 	}
-
+	
 	@Override
-	public void setContentSize(Dimension totalSize) {
-		getContent().getBounds().setSize(totalSize);
+	public void setVisualSize(Dimension totalSize) {
+		getVisual().getShape().resize(totalSize.width, totalSize.height);
 	}
 
 	@Override
-	public void setVisualSize(Dimension totalSize) {
-		GeometryNode<RoundedRectangle> shape = getVisual().getShape();
-		shape.resize(totalSize.getWidth(), totalSize.getHeight());
+	public void setContentSize(Dimension totalSize) {
+		getContent().setBounds(getContent().getBounds().setSize(totalSize));
 	}
 }
