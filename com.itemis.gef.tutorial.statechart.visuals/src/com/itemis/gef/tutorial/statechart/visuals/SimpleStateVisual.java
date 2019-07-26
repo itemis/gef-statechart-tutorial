@@ -18,6 +18,10 @@ public class SimpleStateVisual extends Group {
 
 	private GeometryNode<RoundedRectangle> shape;
 	private Text label;
+	
+	public Text getLabel() {
+		return label;
+	}
 
 	public SimpleStateVisual() {
 		// create shape
