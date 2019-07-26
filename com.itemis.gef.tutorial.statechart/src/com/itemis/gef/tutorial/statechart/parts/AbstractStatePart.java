@@ -26,10 +26,7 @@ public abstract class AbstractStatePart<T extends Node> extends AbstractContentP
 	@Override
 	protected void doRefreshVisual(T visual) {
 		// relocate to model position
-		Rectangle bounds = getContent().getBounds();
-		Affine affine = getAdapter(ITransformableContentPart.TRANSFORM_PROVIDER_KEY).get();
-		affine.setTx(bounds.getX());
-		affine.setTy(bounds.getY());
+		setVisualTransform(getContentTransform());
 	}
 
 	@Override
