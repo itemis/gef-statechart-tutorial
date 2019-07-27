@@ -5,7 +5,7 @@
          point="org.eclipse.ui.views">
       <view
             class="com.itemis.gef.tutorial.statechart.dot.StatechartDotView"
-            id="com.itemis.gef.tutorial.statechart.dot.view1"
+            id="com.itemis.gef.tutorial.statechart.dot.StatechartDotView"
             name="Statechart DOT View"
             restorable="true">
       </view>
