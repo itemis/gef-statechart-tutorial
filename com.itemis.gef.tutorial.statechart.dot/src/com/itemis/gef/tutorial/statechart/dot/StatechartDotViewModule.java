@@ -23,5 +23,9 @@ public class StatechartDotViewModule extends DotGraphViewModule implements Modul
 
 		// resize policy to resize nesting nodes
 		adapterMapBinder.addBinding(AdapterKey.defaultRole()).to(ResizePolicy.class);
+
+		// anchor provider
+//		adapterMapBinder.addBinding(AdapterKey.defaultRole())
+//				.to(/* NodePartAnchorProvider.class */ CustomNodePartAnchorProvider.class);
 	}
 }
