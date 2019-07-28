@@ -1,0 +1,146 @@
+// https://blogs.itemis.com/en/program-an-arduino-with-statemachines-in-5-minutes
+
+digraph {
+	bgcolor=gray95
+	compound = true
+
+//	splines=line
+	splines=ortho
+
+	node[fillcolor=aliceblue shape=Mrecord style=filled]
+
+	subgraph cluster_street_traffic {
+		label = "street_traffic"
+
+		startNode[shape=circle fillcolor=black label="" style=filled width=0.25]
+
+		Green[label="
+			{
+				Green |
+				entry /\l
+				street.red = false;\l
+				street.yellow = false;\l
+				street.green = true\l
+			}"]
+
+		Turning_Yellow[label="
+			{
+				Turning_Yellow |
+			}"]
+
+		Yellow[label="
+			{
+				Yellow |
+				entry /\l
+				street.yellow = true;\l
+				street.green = false\l
+			}"]
+
+		Red[label="
+			{
+				Red |
+				entry /\l
+				street.red = true;\l
+				street.yellow = false\l
+				after 2s /\l
+				raise street_turned_red
+			}"]
+
+		Turning_Yellow_Red[label="
+			{
+				Turning_Yellow_Red |
+				raise street_turning_yellow\l
+				after 10s/\l
+				raise street_turning_green\l
+			}"]
+
+		Yellow_Red[label="
+			{
+				Yellow_Red |
+				entry /\l
+				street.yellow=true\l
+			}"]
+
+		startNode -> Green
+		Green -> Turning_Yellow [label="button_pushed"]
+		Turning_Yellow -> Yellow [label="after 5s"]
+		Yellow -> Red [label="after 3s"]
+		Red -> Turning_Yellow_Red [label="after 22s"]
+		Turning_Yellow_Red -> Yellow_Red [label="after 12s"]
+		Yellow_Red -> Green [label="after 3s"]
+	}
+
+	subgraph cluster_pedestrian_crossing {
+		label = "pedestrian_crossing"
+
+		pc_startNode[shape=circle fillcolor=black label="" style=filled width=0.25]
+
+		pc_Red[label="
+			{
+				Red |
+				entry /\l
+				ped.red = true;\l
+				ped.green = false;\l
+				ped.wait = false\l
+			}"]
+
+		subgraph cluster_green_request {
+			label = "Green_Request"
+			green_request_startNode[shape=circle fillcolor=black label="" style=filled width=0.25]
+			green_request_on[label="
+			{
+				On |
+				entry/\l
+				ped.wait = true
+			}"]
+
+			green_request_off[label="
+			{
+				Off |
+				entry/\l
+				ped.wait = false
+			}"]
+
+			green_request_startNode -> green_request_on
+			green_request_on -> green_request_off [label="after 500ms"]
+			green_request_off -> green_request_on [label="after 500ms"]
+		}
+
+		pc_Green[label="
+			{
+				Green |
+				entry /\l
+				ped.red = false;\l
+				ped.wait = false; /\l
+				ped.green = true\l
+			}"]
+
+		subgraph cluster_turning_red {
+			label = "Turning_Red"
+			turning_red_startNode[shape=circle fillcolor=black label="" style=filled width=0.25]
+			turning_red_on[label="
+			{
+				On |
+				entry/\l
+				ped.green = true
+			}"]
+
+			turning_red_off[label="
+			{
+				Off |
+				entry/\l
+				ped.green = false
+			}"]
+
+			turning_red_startNode -> turning_red_on
+			turning_red_on -> turning_red_off [label="after 500ms"]
+			turning_red_off -> turning_red_on [label="after 500ms"]
+		}
+
+		pc_startNode -> pc_Red
+		pc_Red -> green_request_startNode [lhead=cluster_green_request label="button_pushed"]
+		green_request_off -> pc_Green [ltail=cluster_green_request label="street_turned_red"]
+		pc_Green -> turning_red_on [lhead=cluster_turning_red label="street_turning_yellow"]
+		turning_red_on -> pc_Red [ltail=cluster_turning_red label="street_turning_green"]
+	}
+}
