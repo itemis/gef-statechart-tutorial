@@ -2,6 +2,9 @@ digraph {
 
 	rankdir=LR
 
+//	splines=line
+	splines=ortho
+
 	node[fillcolor=black label="" style=filled width=0.25]
 
 	startNode[shape=circle]
